@@ -1,5 +1,5 @@
 interface UserDto {
-  _id: String
+  _id?: String
   name?: String
   lastname?: String
   age?: Number
