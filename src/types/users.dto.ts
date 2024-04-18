@@ -3,7 +3,6 @@ interface UserDto {
   name?: String
   lastname?: String
   age?: Number
-  country?: String
   password?: String
 }
 

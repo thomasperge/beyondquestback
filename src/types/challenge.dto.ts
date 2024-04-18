@@ -2,13 +2,13 @@ interface ChallengeDto {
   _id?: String
   generate_by_user_id?: String
   text?: String
-  time_to_complete_the_challenge?: Number
+  categorie?: String
 }
 
-interface ChallengeInProgressDto {
+interface JoinChallengeDto {
   challenge_id?: String
   user_id?: String
   completed?: Boolean
 }
 
-export { ChallengeDto, ChallengeInProgressDto }
+export { ChallengeDto, JoinChallengeDto }

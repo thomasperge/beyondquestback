@@ -13,6 +13,15 @@ export default function (app: any) {
     }
   });
 
+  app.get("/users/data/:userId", jsonMiddleware, (req: any, res: Response) => {
+    const userId = req.params.userId;
+    if (userId) {
+      createUserService.getUserData(userId, res);
+    } else {
+      res.status(400).send("User ID is missing");
+    }
+  });
+
   app.post("/users/signin", jsonMiddleware, (req: Request<UserDto>, res: Response) => {
     if (req.body) {
       createUserService.signinUser(req.body, res);

@@ -1,27 +1,28 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
-let challengeSchema = new mongoose.Schema(
+let joinChallengeSchema = new mongoose.Schema(
   {
     _id: {
       type: String,
       default: uuidv4,
       primary: true,
     },
-    generate_by_user_id: {
+    challenge_id: {
       type: String,
       required: true,
     },
-    text: {
+    user_id: {
       type: String,
-      required: true
+      required: true,
     },
-    categorie: {
+    completed: {
       type: String,
-      required: true
+      required: false,
+      default: false
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("challenge", challengeSchema);
+export default mongoose.model("join_challenge", joinChallengeSchema);

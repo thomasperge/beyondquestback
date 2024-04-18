@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { connect } from "mongoose";
 import UserRoutes from './src/routes/users.route'
+import ChallengeRoutes from './src/routes/challenge.route'
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 UserRoutes(app)
+ChallengeRoutes(app)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
