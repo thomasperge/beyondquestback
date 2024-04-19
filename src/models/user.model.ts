@@ -23,6 +23,10 @@ let userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true
+    },
+    hobbies: {
+      type: Array<String>,
+      required: true
     }
   },
   { timestamps: true }

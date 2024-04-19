@@ -1,5 +1,7 @@
 import { Response } from 'express';
 import usersSchema from '../models/user.model';
+import joinChallengeSchema from '../models/join_challenge.model';
+import challengeSchema from '../models/challenge.model';
 import { UserDto } from "../types/users.dto";
 
 async function createUser(req: UserDto, res: Response): Promise<void> {
@@ -9,11 +11,16 @@ async function createUser(req: UserDto, res: Response): Promise<void> {
       throw new Error("Username already exists");
     }
 
+    if (req.hobbies?.length == undefined || req.hobbies?.length < 2) {
+      throw new Error("Hoobies must have 2 value");
+    }
+
     const newUser = new usersSchema({
       name: req.name,
       lastname: req.lastname,
       age: req.age,
-      password: req.password
+      password: req.password,
+      hobbies: req.hobbies
     });
 
     await newUser.validate();
@@ -55,8 +62,43 @@ async function getUserData(req: string, res: Response): Promise<void> {
   }
 }
 
+async function getUsersChallengeJoined(req: string, res: Response): Promise<void> {
+  try {
+    const userData = await usersSchema.findOne({ _id: req });
+
+    if (!userData) {
+      res.status(400).send({ message: "User not found", status: 1 });
+      return;
+    }
+
+    const allChallengeJoinedData = await joinChallengeSchema.find({ user_id: req });
+    const allChallengesData = [];
+
+    for (let challenge of allChallengeJoinedData) {
+      const challengeData = await challengeSchema.findOne({ _id: challenge.challenge_id });
+
+      if (challengeData) {
+        const isCompleted = challenge.completed === 'true';
+
+        const challengeWithStatus = {
+          ...challengeData.toObject(),
+          completed: isCompleted
+        };
+
+        allChallengesData.push(challengeWithStatus);
+      }
+    }
+
+    res.status(200).send(allChallengesData);
+  } catch (error: any) {
+    res.status(500).send(error.message);
+  }
+}
+
+
 export default {
   createUser,
   signinUser,
-  getUserData
+  getUserData,
+  getUsersChallengeJoined
 };

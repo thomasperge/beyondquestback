@@ -22,4 +22,8 @@ export default function (app: any) {
       res.status(400).send("Request body is missing or empty");
     }
   });
+
+  app.get("/challenge/get-trends", jsonMiddleware, (req: Request<JoinChallengeDto>, res: Response) => {
+    challengeService.getTrendingChallenge(req, res);
+  });
 }

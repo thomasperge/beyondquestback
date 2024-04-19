@@ -4,6 +4,7 @@ interface UserDto {
   lastname?: String
   age?: Number
   password?: String
+  hobbies?: String[]
 }
 
 export { UserDto }

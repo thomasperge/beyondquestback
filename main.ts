@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { connect } from "mongoose";
 import UserRoutes from './src/routes/users.route'
 import ChallengeRoutes from './src/routes/challenge.route'
@@ -7,6 +8,18 @@ import ChallengeRoutes from './src/routes/challenge.route'
 dotenv.config();
 
 const app: Express = express();
+app.use(cors());
+
+app.use((req, res, next) => {
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader(
+		"Access-Control-Allow-Methods",
+		"GET, POST, PUT, PATCH, DELETE"
+	);
+	res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+	next();
+});
+
 const port = process.env.PORT || 3000;
 
 const mongo_uri = process.env.MONGODB_URL;

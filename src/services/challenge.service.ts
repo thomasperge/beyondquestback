@@ -31,12 +31,45 @@ async function generateChallenge(req: ChallengeDto, res: Response): Promise<void
     await newJoinChallenge.validate();
     await newJoinChallenge.save();
 
-    res.status(200).send({ message: "Challenge created successfully", status: 0 });
+    res.status(200).send(newChallenge);
   } catch (error: any) {
     res.status(400).send(error.message);
   }
 }
 
+async function getTrendingChallenge(req: any, res: Response): Promise<void> {
+  try {
+    const trendingChallenges = await joinChallengeSchema.aggregate([
+      {
+        $group: {
+          _id: "$challenge_id",
+          joinsCount: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { joinsCount: -1 }
+      }
+    ]);
+
+    const top3TrendingChallenges = trendingChallenges.slice(0, 3);
+
+    const trendingChallengesDetails = await Promise.all(top3TrendingChallenges.map(async (trendingChallenge: any) => {
+      const challengeData = await challengeSchema.findOne({ _id: trendingChallenge._id });
+      return {
+        challenge_id: trendingChallenge._id,
+        joinsCount: trendingChallenge.joinsCount,
+        challengeData: challengeData
+      };
+    }));
+
+    res.status(200).send(trendingChallengesDetails);
+  } catch (error: any) {
+    res.status(500).send(error.message);
+  }
+}
+
+
 export default {
   generateChallenge,
+  getTrendingChallenge
 };
