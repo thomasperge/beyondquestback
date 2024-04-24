@@ -26,7 +26,7 @@ async function createUser(req: UserDto, res: Response): Promise<void> {
     await newUser.validate();
     await newUser.save();
 
-    res.status(200).send({ message: "User created successfully", status: 0 });
+    res.status(200).send(newUser);
   } catch (error: any) {
     res.status(400).send(error.message);
   }
@@ -78,11 +78,9 @@ async function getUsersChallengeJoined(req: string, res: Response): Promise<void
       const challengeData = await challengeSchema.findOne({ _id: challenge.challenge_id });
 
       if (challengeData) {
-        const isCompleted = challenge.completed === 'true';
-
         const challengeWithStatus = {
+          ...challenge.toObject(),
           ...challengeData.toObject(),
-          completed: isCompleted
         };
 
         allChallengesData.push(challengeWithStatus);
