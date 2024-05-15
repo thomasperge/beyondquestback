@@ -17,7 +17,7 @@ let joinChallengeSchema = new mongoose.Schema(
       required: true,
     },
     completed: {
-      type: String,
+      type: Boolean,
       required: false,
       default: false
     },

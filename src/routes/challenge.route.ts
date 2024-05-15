@@ -23,6 +23,11 @@ export default function (app: any) {
     }
   });
 
+  app.get("/challenge/user/:id", jsonMiddleware, (req: Request, res: Response) => {
+    const userId = req.params.id;
+    challengeService.getAllUserJoinedChallenge(userId, res);
+  });
+
   app.get("/challenge/get-trends", jsonMiddleware, (req: Request<JoinChallengeDto>, res: Response) => {
     challengeService.getTrendingChallenge(req, res);
   });

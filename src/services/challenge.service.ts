@@ -1,9 +1,11 @@
 import { Response } from 'express';
-import { ChallengeDto } from '../types/challenge.dto';
+import { ChallengeDto, JoinChallengeDto } from '../types/challenge.dto';
 import challengeSchema from '../models/challenge.model'
 import joinChallengeSchema from '../models/join_challenge.model'
 import usersSchema from '../models/user.model'
 import OpenAI from 'openai';
+import join_challengeModel from '../models/join_challenge.model';
+import challengeModel from '../models/challenge.model';
 
 async function generateChallenge(req: ChallengeDto, res: Response): Promise<void> {
   try {
@@ -37,7 +39,7 @@ async function generateChallenge(req: ChallengeDto, res: Response): Promise<void
     const newChallenge = new challengeSchema({
       generate_by_user_id: req._id,
       text: response.choices[0].message.content,
-      categorie: req.hobbies,
+      hobbies: req.hobbies,
     });
 
     const newJoinChallenge = new joinChallengeSchema({
@@ -89,8 +91,38 @@ async function getTrendingChallenge(req: any, res: Response): Promise<void> {
   }
 }
 
+interface CompletedChallenge extends ChallengeDto {
+  completed?: boolean;
+}
+
+async function getAllUserJoinedChallenge(user_id: string, res: Response): Promise<void> {
+  try {
+    const allChallengeJoined: JoinChallengeDto[] = await join_challengeModel.find({ user_id: user_id });
+
+    const userJoinedChallenges: CompletedChallenge[] = [];
+
+    for (const joinChallenge of allChallengeJoined) {
+      const challenge: ChallengeDto | null = await challengeModel.findOne({ _id: joinChallenge.challenge_id });
+
+      if (challenge) {
+        const completed: boolean = joinChallenge.completed ?? false;
+        const { _id, generate_by_user_id, text, hobbies } = challenge;
+
+        const completedChallenge: CompletedChallenge = { _id, generate_by_user_id, text, hobbies, completed, createdAt: joinChallenge.createdAt };
+        userJoinedChallenges.push(completedChallenge);
+      }
+    }
+
+    res.status(200).send(userJoinedChallenges);
+  } catch (error: any) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+}
+
 
 export default {
   generateChallenge,
-  getTrendingChallenge
+  getTrendingChallenge,
+  getAllUserJoinedChallenge
 };

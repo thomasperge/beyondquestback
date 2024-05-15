@@ -1,14 +1,19 @@
 interface ChallengeDto {
-  _id?: String
-  generate_by_user_id?: String
-  text?: String
-  hobbies?: String
+  _id?: string
+  generate_by_user_id?: string
+  text?: string
+  hobbies?: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 interface JoinChallengeDto {
-  challenge_id?: String
-  user_id?: String
-  completed?: Boolean
+  _id?: string
+  challenge_id?: string
+  user_id?: string
+  completed?: boolean
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export { ChallengeDto, JoinChallengeDto }

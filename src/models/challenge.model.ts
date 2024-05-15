@@ -16,7 +16,7 @@ let challengeSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    categorie: {
+    hobbies: {
       type: String,
       required: true
     },
