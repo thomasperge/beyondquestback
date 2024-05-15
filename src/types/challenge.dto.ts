@@ -2,7 +2,7 @@ interface ChallengeDto {
   _id?: String
   generate_by_user_id?: String
   text?: String
-  categorie?: String
+  hobbies?: String
 }
 
 interface JoinChallengeDto {

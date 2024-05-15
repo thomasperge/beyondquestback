@@ -3,25 +3,46 @@ import { ChallengeDto } from '../types/challenge.dto';
 import challengeSchema from '../models/challenge.model'
 import joinChallengeSchema from '../models/join_challenge.model'
 import usersSchema from '../models/user.model'
+import OpenAI from 'openai';
 
 async function generateChallenge(req: ChallengeDto, res: Response): Promise<void> {
   try {
-    const existingUser = await usersSchema.findOne({ _id: req.generate_by_user_id });
+    console.log(req);
+
+    const existingUser = await usersSchema.findOne({ _id: req._id });
 
     if (!existingUser) {
       res.status(404).send({ message: "User not found", status: 1 });
       return;
     }
 
+    // Openai => Generate challenge
+    const openAi_uri = process.env.OPENAI_SECRET_KEY;
+
+    const openai = new OpenAI({
+      apiKey: openAi_uri,
+    });
+
+    const response: any = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { "role": "system", "content": `Tu est un générateur de challenge sur le thème de : ${req.hobbies}` },
+        { "role": "user", "content": `Génére moi un seule challenge (maximum 70 caractères)` },
+      ],
+      temperature: 1,
+      max_tokens: 256,
+      top_p: 1
+    });
+
     const newChallenge = new challengeSchema({
-      generate_by_user_id: req.generate_by_user_id,
-      text: req.text,
-      categorie: req.categorie,
+      generate_by_user_id: req._id,
+      text: response.choices[0].message.content,
+      categorie: req.hobbies,
     });
 
     const newJoinChallenge = new joinChallengeSchema({
       challenge_id: newChallenge._id,
-      user_id: req.generate_by_user_id,
+      user_id: newChallenge.generate_by_user_id,
       completed: false,
     });
 

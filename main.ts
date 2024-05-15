@@ -23,9 +23,14 @@ app.use((req, res, next) => {
 const port = process.env.PORT || 3000;
 
 const mongo_uri = process.env.MONGODB_URL;
+const openAi_uri = process.env.OPENAI_SECRET_KEY;
 
 if (!mongo_uri) {
-  throw new Error("La variable d'environnement MONGODB_URL n'est pas définie.");
+	throw new Error("La variable d'environnement MONGODB_URL n'est pas définie.");
+}
+
+if (!openAi_uri) {
+	throw new Error("La variable d'environnement OPENAI_SECRET_KEY n'est pas définie.");
 }
 
 connect(mongo_uri, {
@@ -37,12 +42,12 @@ connect(mongo_uri, {
 	.catch((err) => console.log(err));
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+	res.send("Express + TypeScript Server");
 });
 
 UserRoutes(app)
 ChallengeRoutes(app)
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+	console.log(`[server]: Server is running at http://localhost:${port}`);
 });
