@@ -162,10 +162,42 @@ async function quitJoinedChallenge(challenge_joined_id: string, res: Response): 
   }
 }
 
+async function redoAChallenge(challenge_joined_id: string, res: Response): Promise<void> {
+  try {
+    const joinedChallenge = await join_challengeModel.findOne({ _id: challenge_joined_id });
+    const challenge = await challengeModel.findOne({ _id: joinedChallenge?.challenge_id });
+
+    if (!challenge || !joinedChallenge) {
+      res.status(404).send({ message: "Challenge not found", status: 1 });
+      return;
+    }
+
+    if (!joinedChallenge.completed) {
+      res.status(404).send({ message: "Challenge not yet finish", status: 1 });
+      return;
+    }
+
+    const newJoinChallenge = new joinChallengeSchema({
+      challenge_id: challenge._id,
+      user_id: joinedChallenge.user_id,
+      completed: false,
+    });
+
+    await newJoinChallenge.validate();
+    await newJoinChallenge.save();
+
+    res.status(200).send({ message: "Le challenge a été quitté avec succès.", status: 0 });
+  } catch (error: any) {
+    console.error(error);
+    res.status(400).send({ message: error.message, status: 0 });
+  }
+}
+
 export default {
   generateChallenge,
   getTrendingChallenge,
   getAllUserJoinedChallenge,
   completeAJoinedChallenge,
-  quitJoinedChallenge
+  quitJoinedChallenge,
+  redoAChallenge
 };

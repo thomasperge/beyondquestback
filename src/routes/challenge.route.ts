@@ -38,6 +38,11 @@ export default function (app: any) {
     challengeService.quitJoinedChallenge(challengeJoinedId, res);
   });
 
+  app.get("/challenge/redo/:idChallenge", jsonMiddleware, (req: Request, res: Response) => {
+    const challengeJoinedId = req.params.idChallenge;
+    challengeService.redoAChallenge(challengeJoinedId, res);
+  });
+
   app.get("/challenge/get-trends", jsonMiddleware, (req: Request<JoinChallengeDto>, res: Response) => {
     challengeService.getTrendingChallenge(req, res);
   });
