@@ -110,7 +110,7 @@ async function getAllUserJoinedChallenge(user_id: string, res: Response): Promis
         const completed: boolean = joinChallenge.completed ?? false;
         const { _id, generate_by_user_id, text, hobbies } = challenge;
 
-        const completedChallenge: CompletedChallenge = { challenge_joined_id: joinChallenge._id, challenge_id: challenge._id, generate_by_user_id, text, hobbies, completed, createdAt: joinChallenge.createdAt };
+        const completedChallenge: CompletedChallenge = { challenge_joined_id: joinChallenge._id, challenge_id: challenge._id, generate_by_user_id, text, hobbies, completed, createdAt: joinChallenge.createdAt, updatedAt: joinChallenge.updatedAt };
         userJoinedChallenges.push(completedChallenge);
       }
     }
