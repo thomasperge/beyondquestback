@@ -23,9 +23,14 @@ export default function (app: any) {
     }
   });
 
-  app.get("/challenge/user/:id", jsonMiddleware, (req: Request, res: Response) => {
-    const userId = req.params.id;
+  app.get("/challenge/user/:userid", jsonMiddleware, (req: Request, res: Response) => {
+    const userId = req.params.userid;
     challengeService.getAllUserJoinedChallenge(userId, res);
+  });
+
+  app.get("/challenge/complete/:idChallenge", jsonMiddleware, (req: Request, res: Response) => {
+    const challengeJoinedId = req.params.idChallenge;
+    challengeService.completeAJoinedChallenge(challengeJoinedId, res);
   });
 
   app.get("/challenge/get-trends", jsonMiddleware, (req: Request<JoinChallengeDto>, res: Response) => {

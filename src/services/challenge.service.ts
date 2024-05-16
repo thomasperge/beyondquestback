@@ -92,6 +92,8 @@ async function getTrendingChallenge(req: any, res: Response): Promise<void> {
 }
 
 interface CompletedChallenge extends ChallengeDto {
+  challenge_joined_id?: string;
+  challenge_id?: string;
   completed?: boolean;
 }
 
@@ -108,11 +110,13 @@ async function getAllUserJoinedChallenge(user_id: string, res: Response): Promis
         const completed: boolean = joinChallenge.completed ?? false;
         const { _id, generate_by_user_id, text, hobbies } = challenge;
 
-        const completedChallenge: CompletedChallenge = { _id, generate_by_user_id, text, hobbies, completed, createdAt: joinChallenge.createdAt };
+        const completedChallenge: CompletedChallenge = { challenge_joined_id: joinChallenge._id, challenge_id: challenge._id, generate_by_user_id, text, hobbies, completed, createdAt: joinChallenge.createdAt };
         userJoinedChallenges.push(completedChallenge);
       }
     }
 
+    console.log(userJoinedChallenges);
+    
     res.status(200).send(userJoinedChallenges);
   } catch (error: any) {
     console.log(error);
@@ -120,9 +124,30 @@ async function getAllUserJoinedChallenge(user_id: string, res: Response): Promis
   }
 }
 
+async function completeAJoinedChallenge(challenge_joined_id: string, res: Response): Promise<void> {
+  try {
+    console.log(challenge_joined_id);
+    
+    const challengeJoined = await join_challengeModel.findOneAndUpdate(
+      { _id: challenge_joined_id },
+      { completed: true },
+      { new: true }
+    );
+
+    if (!challengeJoined) {
+      throw new Error('Le challenge rejoint spécifié est introuvable.');
+    }
+
+    res.status(200).send({ message: "Success", status: 1, challengeJoined });
+  } catch (error: any) {
+    console.error(error);
+    res.status(400).send({ message: error.message, status: 0 });
+  }
+}
 
 export default {
   generateChallenge,
   getTrendingChallenge,
-  getAllUserJoinedChallenge
+  getAllUserJoinedChallenge,
+  completeAJoinedChallenge
 };
