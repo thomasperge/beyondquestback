@@ -33,6 +33,11 @@ export default function (app: any) {
     challengeService.completeAJoinedChallenge(challengeJoinedId, res);
   });
 
+  app.get("/challenge/leave/:idChallenge", jsonMiddleware, (req: Request, res: Response) => {
+    const challengeJoinedId = req.params.idChallenge;
+    challengeService.quitJoinedChallenge(challengeJoinedId, res);
+  });
+
   app.get("/challenge/get-trends", jsonMiddleware, (req: Request<JoinChallengeDto>, res: Response) => {
     challengeService.getTrendingChallenge(req, res);
   });

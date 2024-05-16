@@ -145,9 +145,27 @@ async function completeAJoinedChallenge(challenge_joined_id: string, res: Respon
   }
 }
 
+async function quitJoinedChallenge(challenge_joined_id: string, res: Response): Promise<void> {
+  try {
+    const deletedChallenge = await join_challengeModel.findOneAndDelete(
+      { _id: challenge_joined_id }
+    );
+
+    if (!deletedChallenge) {
+      throw new Error('Le challenge rejoint spécifié est introuvable.');
+    }
+
+    res.status(200).send({ message: "Le challenge a été quitté avec succès.", status: 1, deletedChallenge });
+  } catch (error: any) {
+    console.error(error);
+    res.status(400).send({ message: error.message, status: 0 });
+  }
+}
+
 export default {
   generateChallenge,
   getTrendingChallenge,
   getAllUserJoinedChallenge,
-  completeAJoinedChallenge
+  completeAJoinedChallenge,
+  quitJoinedChallenge
 };
