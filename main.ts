@@ -4,6 +4,7 @@ import cors from "cors";
 import { connect } from "mongoose";
 import UserRoutes from './src/routes/users.route'
 import ChallengeRoutes from './src/routes/challenge.route'
+import TweetRoutes from './src/routes/tweet.route'
 
 dotenv.config();
 
@@ -47,6 +48,7 @@ app.get("/", (req: Request, res: Response) => {
 
 UserRoutes(app)
 ChallengeRoutes(app)
+TweetRoutes(app)
 
 app.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);

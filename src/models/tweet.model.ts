@@ -1,7 +1,13 @@
 import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 let postSchema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      default: uuidv4,
+      primary: true,
+    },
     user_id: {
       type: String,
       required: true,
@@ -18,4 +24,4 @@ let postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("posts", postSchema);
+export default mongoose.model("tweet", postSchema);
