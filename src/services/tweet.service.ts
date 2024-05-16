@@ -10,8 +10,6 @@ async function createTweet(tweetDto: TweetDto, res: Response): Promise<void> {
       text: tweetDto.text
     });
 
-    console.log(newTweet);
-
     await newTweet.validate();
     await newTweet.save();
 
