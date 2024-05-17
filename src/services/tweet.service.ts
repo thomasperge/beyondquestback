@@ -19,8 +19,6 @@ async function createTweet(tweetDto: TweetDto, res: Response): Promise<void> {
       throw new Error('Challenge not found');
     }
 
-    console.log("===============", tweetDto);
-
     const newTweet = new tweetModel({
       user_id: tweetDto.user_id,
       challenge_id: challenge._id,
@@ -95,7 +93,7 @@ async function getAllTweet(req: any, res: Response): Promise<void> {
     }));
 
     // console.log(enrichedTweets);
-    res.status(200).send(enrichedTweets);
+    res.status(200).send(enrichedTweets.reverse());
   } catch (error) {
     console.error("Error getting all tweets:", error);
     res.status(500).send("Internal Server Error");
