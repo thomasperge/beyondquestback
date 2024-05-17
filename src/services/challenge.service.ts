@@ -28,7 +28,7 @@ async function generateChallenge(req: ChallengeDto, res: Response): Promise<void
     const response: any = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
-        { "role": "system", "content": `Tu est un générateur de challenge sur le thème de : ${req.hobbies}` },
+        { "role": "system", "content": `Tu es un générateur de challenge de développement personnel sur le thème de : ${req.hobbies}` },
         { "role": "user", "content": `Génére moi un seule challenge (maximum 70 caractères)` },
       ],
       temperature: 1,

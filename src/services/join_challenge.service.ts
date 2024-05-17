@@ -23,11 +23,13 @@ async function joinChallenge(req: JoinChallengeDto, res: Response): Promise<void
     const newJoinChallenge = new joinChallengeSchema({
       challenge_id: req.challenge_id,
       user_id: req.user_id,
-      completed: req.completed,
+      completed: false,
     });
 
     await newJoinChallenge.validate();
     await newJoinChallenge.save();
+
+    console.log("=================== : ", newJoinChallenge);
 
     res.status(201).send({ message: "Challenge joined successfully", status: 0 });
   } catch (error: any) {

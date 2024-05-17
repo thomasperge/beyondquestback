@@ -12,4 +12,8 @@ export default function (app: any) {
       res.status(400).send("Request body is missing or empty");
     }
   });
+
+  app.get("/tweet/all", jsonMiddleware, (req: any, res: Response) => {
+    tweetService.getAllTweet(req, res);
+  });
 }
