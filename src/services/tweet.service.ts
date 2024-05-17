@@ -19,6 +19,8 @@ async function createTweet(tweetDto: TweetDto, res: Response): Promise<void> {
       throw new Error('Challenge not found');
     }
 
+    console.log("===============", tweetDto);
+
     const newTweet = new tweetModel({
       user_id: tweetDto.user_id,
       challenge_id: challenge._id,
