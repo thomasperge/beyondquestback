@@ -3,6 +3,7 @@ interface ChallengeDto {
   generate_by_user_id?: string
   text?: string
   hobbies?: string
+  level?: string
   createdAt?: Date
   updatedAt?: Date
 }

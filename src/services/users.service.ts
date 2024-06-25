@@ -41,7 +41,7 @@ async function signinUser(req: UserDto, res: Response): Promise<void> {
       return;
     }
 
-    res.status(200).send({ message: "Login successful", status: 0 });
+    res.status(200).send(existingUser);
   } catch (error: any) {
     res.status(500).send(error.message);
   }

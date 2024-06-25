@@ -56,6 +56,10 @@ async function getAllTweet(req: any, res: Response): Promise<void> {
         user_id: tweet.user_id
       });
 
+      const numberOfParticipants = await join_challengeModel.countDocuments({
+        challenge_id: tweet.challenge_id
+      });
+
       // Obtenir les informations de l'utilisateur qui a généré le challenge
       const generatedByUser = await userModel.findOne({ _id: challenge?.generate_by_user_id });
 
@@ -78,6 +82,7 @@ async function getAllTweet(req: any, res: Response): Promise<void> {
           hobbies: challenge.hobbies
         },
         generatedByUser: {
+          _id: generatedByUser._id,
           name: generatedByUser.name,
           lastname: generatedByUser.lastname
         },
@@ -88,7 +93,8 @@ async function getAllTweet(req: any, res: Response): Promise<void> {
           _id: joinedByUser._id,
           name: joinedByUser.name,
           lastname: joinedByUser.lastname
-        }
+        },
+        numberOfParticipants: numberOfParticipants
       };
     }));
 

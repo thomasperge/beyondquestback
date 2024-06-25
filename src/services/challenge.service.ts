@@ -18,6 +18,12 @@ async function generateChallenge(req: ChallengeDto, res: Response): Promise<void
       return;
     }
 
+    if (!req.hobbies) {
+      res.status(400).send("Hobbies not defined");
+    } else if (!req.level) {
+      req.level = "Facile"
+    }
+
     // Openai => Generate challenge
     const openAi_uri = process.env.OPENAI_SECRET_KEY;
 
@@ -29,7 +35,7 @@ async function generateChallenge(req: ChallengeDto, res: Response): Promise<void
       model: "gpt-3.5-turbo",
       messages: [
         { "role": "system", "content": `Tu es un générateur de challenge de développement personnel sur le thème de : ${req.hobbies}` },
-        { "role": "user", "content": `Génére moi un seule challenge (maximum 70 caractères)` },
+        { "role": "user", "content": `Génére moi un seule challenge ${req.level} (maximum 70 caractères)` },
       ],
       temperature: 1,
       max_tokens: 256,
@@ -108,15 +114,13 @@ async function getAllUserJoinedChallenge(user_id: string, res: Response): Promis
 
       if (challenge) {
         const completed: boolean = joinChallenge.completed ?? false;
-        const { _id, generate_by_user_id, text, hobbies } = challenge;
+        const { generate_by_user_id, text, hobbies } = challenge;
 
         const completedChallenge: CompletedChallenge = { challenge_joined_id: joinChallenge._id, challenge_id: challenge._id, generate_by_user_id, text, hobbies, completed, createdAt: joinChallenge.createdAt, updatedAt: joinChallenge.updatedAt };
         userJoinedChallenges.push(completedChallenge);
       }
     }
 
-    console.log(userJoinedChallenges);
-    
     res.status(200).send(userJoinedChallenges);
   } catch (error: any) {
     console.log(error);
@@ -127,7 +131,7 @@ async function getAllUserJoinedChallenge(user_id: string, res: Response): Promis
 async function completeAJoinedChallenge(challenge_joined_id: string, res: Response): Promise<void> {
   try {
     console.log(challenge_joined_id);
-    
+
     const challengeJoined = await join_challengeModel.findOneAndUpdate(
       { _id: challenge_joined_id },
       { completed: true },
